@@ -1,0 +1,41 @@
+---
+import { site } from '../site.config';
+const year = new Date().getFullYear();
+const links = Object.entries(site.social).filter(([, url]) => url);
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="links">
+      {links.map(([name, url]) => (
+        <a href={url} rel="me noopener" target="_blank">{name}</a>
+      ))}
+      <a href={`mailto:${site.email}`}>email</a>
+    </div>
+    <small>© {year} {site.author}</small>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 4rem;
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 0 3rem;
+  }
+
+  .links {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .links a {
+    color: var(--muted);
+    border-bottom: none;
+    font-size: 0.9rem;
+  }
+
+  .links a:hover {
+    color: var(--fg);
+  }
+</style>

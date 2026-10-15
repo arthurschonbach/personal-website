@@ -1,0 +1,117 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('portfolio', ({ data }) => !data.draft);
+  return items.map((item) => ({
+    params: { slug: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+---
+
+<BaseLayout title={item.data.title} description={item.data.description}>
+  <article>
+    <header>
+      <h1>{item.data.title}</h1>
+      <p class="muted">{item.data.description}</p>
+      <dl class="facts">
+        {item.data.role && (
+          <div>
+            <dt>Role</dt>
+            <dd>{item.data.role}</dd>
+          </div>
+        )}
+        {item.data.client && (
+          <div>
+            <dt>Client</dt>
+            <dd>{item.data.client}</dd>
+          </div>
+        )}
+        {item.data.year && (
+          <div>
+            <dt>Year</dt>
+            <dd>{item.data.year}</dd>
+          </div>
+        )}
+      </dl>
+      {item.data.tags.length > 0 && (
+        <div class="tags">
+          {item.data.tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+      {item.data.url && (
+        <div class="links">
+          <a href={item.data.url} rel="noopener" target="_blank">View project ↗</a>
+        </div>
+      )}
+    </header>
+
+    {item.data.image && <img class="cover" src={item.data.image} alt="" />}
+
+    <div class="prose">
+      <Content />
+    </div>
+    <hr />
+    <p><a href="/portfolio">← All work</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  article header {
+    margin-bottom: 2rem;
+  }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin: 0.75rem 0 0;
+  }
+
+  .facts dt {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .facts dd {
+    margin: 0.1rem 0 0;
+    font-size: 0.9rem;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.05rem 0.5rem;
+  }
+
+  .links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .cover {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+</style>
