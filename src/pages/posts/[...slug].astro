@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -35,7 +36,7 @@ const { Content } = await render(post);
       <Content />
     </div>
     <hr />
-    <p><a href="/posts">← All posts</a></p>
+    <p><a href={withBase('/posts')}>← All posts</a></p>
   </article>
 </BaseLayout>
 
