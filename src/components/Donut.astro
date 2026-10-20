@@ -1,10 +1,10 @@
 ---
 // A small torus drawn in Braille dots: each character is a 2x4 grid of dots,
 // shaded by ordered dithering. After Andy Sloane's donut.c (2006).
-// Spins slowly; drag it to turn it yourself.
+// Spins slowly on its own.
 ---
 
-<pre class="donut" aria-hidden="true" title="Drag me"></pre>
+<pre class="donut" aria-hidden="true"></pre>
 
 <style>
   .donut {
@@ -16,13 +16,10 @@
     line-height: 1;
     color: var(--muted);
     width: max-content;
-    cursor: grab;
+    /* The global pre style scrolls code blocks; this one must never scroll. */
+    overflow: hidden;
+    border-radius: 0;
     user-select: none;
-    touch-action: none;
-  }
-
-  .donut:active {
-    cursor: grabbing;
   }
 </style>
 
@@ -69,10 +66,8 @@
 
     let a = 1.0; // rotation about the x axis
     let b = 0.6; // rotation about the z axis
-    let va = 0.00045; // radians per millisecond
-    let vb = 0.00025;
-    const baseVa = va;
-    const baseVb = vb;
+    const va = 0.00045; // radians per millisecond
+    const vb = 0.00025;
 
     const draw = () => {
       lum.fill(-1);
@@ -125,40 +120,6 @@
       pre.textContent = out;
     };
 
-    // Drag to spin: the pointer sets the speed, then it eases back to its own pace.
-    let dragging = false;
-    let lastX = 0, lastY = 0, lastT = 0;
-
-    pre.addEventListener('pointerdown', (e) => {
-      dragging = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      lastT = performance.now();
-      pre.setPointerCapture(e.pointerId);
-    });
-
-    pre.addEventListener('pointermove', (e) => {
-      if (!dragging) return;
-      const now = performance.now();
-      const dt = Math.max(1, now - lastT);
-      const dx = e.clientX - lastX;
-      const dy = e.clientY - lastY;
-      b += dx * 0.02;
-      a += dy * 0.02;
-      vb = (dx * 0.02) / dt;
-      va = (dy * 0.02) / dt;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      lastT = now;
-      if (reduced) draw();
-    });
-
-    const release = () => {
-      dragging = false;
-    };
-    pre.addEventListener('pointerup', release);
-    pre.addEventListener('pointercancel', release);
-
     draw(); // first pass gives the box its size
     measure();
     draw();
@@ -175,14 +136,8 @@
       const tick = (t: number) => {
         const dt = prev ? Math.min(t - prev, 50) : 16;
         prev = t;
-        if (!dragging) {
-          // Ease the speed back towards the resting spin.
-          const ease = 1 - Math.exp(-dt / 900);
-          va += (baseVa - va) * ease;
-          vb += (baseVb - vb) * ease;
-          a += va * dt;
-          b += vb * dt;
-        }
+        a += va * dt;
+        b += vb * dt;
         draw();
         frame = requestAnimationFrame(tick);
       };
