@@ -17,22 +17,18 @@ const { Content } = await render(project);
 
 <BaseLayout title={project.data.title} description={project.data.description}>
   <article>
-    <header>
+    <header class="article-head">
       <h1>{project.data.title}</h1>
-      <p class="muted">{project.data.description}</p>
-      <div class="meta">
-        {project.data.tags.map((tag) => (
-          <span class="tag">{tag}</span>
-        ))}
-      </div>
-      <div class="links">
-        {project.data.repo && (
-          <a href={project.data.repo} rel="noopener" target="_blank">Repository ↗</a>
-        )}
+      <p>{project.data.description}</p>
+      <dl class="facts">
+        {project.data.tags.length > 0 && (<><dt>Stack</dt><dd>{project.data.tags.join(', ')}</dd></>)}
         {project.data.demo && (
-          <a href={project.data.demo} rel="noopener" target="_blank">Live demo ↗</a>
+          <><dt>Live</dt><dd><a href={project.data.demo} rel="noopener" target="_blank">{project.data.demo.replace(/^https?:\/\//, '')}</a></dd></>
         )}
-      </div>
+        {project.data.repo && (
+          <><dt>Code</dt><dd><a href={project.data.repo} rel="noopener" target="_blank">{project.data.repo.replace(/^https?:\/\//, '')}</a></dd></>
+        )}
+      </dl>
     </header>
     <div class="prose">
       <Content />
@@ -41,30 +37,3 @@ const { Content } = await render(project);
     <p><a href={withBase('/projects')}>← All projects</a></p>
   </article>
 </BaseLayout>
-
-<style>
-  article header {
-    margin-bottom: 2rem;
-  }
-
-  .meta {
-    display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-    margin-top: 0.5rem;
-  }
-
-  .tag {
-    font-size: 0.75rem;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.05rem 0.5rem;
-  }
-
-  .links {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.75rem;
-  }
-</style>

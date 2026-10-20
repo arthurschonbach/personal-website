@@ -9,43 +9,22 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 ---
 
 <BaseLayout title="Posts" description="Articles and write-ups.">
-  <h1>Posts</h1>
-  <p class="muted">Articles and write-ups.</p>
-  <hr />
+  <header class="page-intro">
+    <h1>Posts</h1>
+    <p>Articles and write-ups.</p>
+  </header>
 
   {posts.length === 0 && <p class="muted">No posts yet.</p>}
 
-  <ul class="list">
+  <ul class="entries">
     {posts.map((post) => (
       <li>
-        <a href={withBase(`/posts/${post.id}/`)}>{post.data.title}</a>
-        <time datetime={post.data.date.toISOString()}>
-          {post.data.date.toISOString().slice(0, 10)}
-        </time>
-        <p class="muted">{post.data.description}</p>
+        <div class="entry-head">
+          <a href={withBase(`/posts/${post.id}/`)}>{post.data.title}</a>
+          <time datetime={post.data.date.toISOString()}>{post.data.date.toISOString().slice(0, 10)}</time>
+        </div>
+        <p>{post.data.description}</p>
       </li>
     ))}
   </ul>
 </BaseLayout>
-
-<style>
-  .list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .list li {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .list li p {
-    margin: 0.15rem 0 0;
-    font-size: 0.9rem;
-  }
-
-  .list li time {
-    margin-left: 0.5rem;
-  }
-</style>

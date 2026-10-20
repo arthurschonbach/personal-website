@@ -24,10 +24,15 @@ const pageTitle = title ? `${title} · ${site.title}` : site.title;
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <script is:inline>
       (() => {
-        const stored = localStorage.getItem('theme');
+        let stored = null;
+        try {
+          stored = localStorage.getItem('theme');
+        } catch {}
         const theme =
           stored ||
           (window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -48,6 +53,8 @@ const pageTitle = title ? `${title} · ${site.title}` : site.title;
 
 <style>
   main {
-    padding-top: 3rem;
+    flex: 1;
+    width: 100%;
+    padding-top: 2.5rem;
   }
 </style>

@@ -1,38 +1,53 @@
 ---
 import { site } from '../site.config';
-const year = new Date().getFullYear();
+const built = new Date();
+const year = built.getFullYear();
+const updated = built.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const links = Object.entries(site.social).filter(([, url]) => url);
 ---
 
 <footer class="site-footer">
-  <div class="wrap">
+  <div class="wrap footer-inner">
+    <small>© {year} {site.author} · updated <time datetime={built.toISOString()}>{updated}</time></small>
     <div class="links">
       {links.map(([name, url]) => (
-        <a href={url} rel="me noopener" target="_blank">{name}</a>
+        <a class="plain" href={url} rel="me noopener" target="_blank">{name}</a>
       ))}
       <a href={`mailto:${site.email}`}>email</a>
     </div>
-    <small>© {year} {site.author}</small>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    margin-top: 4rem;
-    border-top: 1px solid var(--border);
-    padding: 1.5rem 0 3rem;
+    margin-top: 5rem;
+    padding: 2rem 0 3rem;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+  }
+
+  small,
+  time {
+    color: var(--faint);
+    font-size: 0.8125rem;
   }
 
   .links {
     display: flex;
-    gap: 1.25rem;
-    margin-bottom: 0.5rem;
+    gap: 1rem;
+    font-size: 0.8125rem;
   }
 
   .links a {
     color: var(--muted);
-    border-bottom: none;
-    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
   }
 
   .links a:hover {

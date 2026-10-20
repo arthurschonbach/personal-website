@@ -8,7 +8,7 @@ export default defineConfig({
   base: '/personal-website/',
   markdown: {
     shikiConfig: {
-      theme: 'github-light',
+      themes: { light: 'github-light', dark: 'github-dark' },
     },
   },
 });

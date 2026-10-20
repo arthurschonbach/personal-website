@@ -7,6 +7,9 @@ import { withBase } from '../lib/url';
 const portfolio = (await getCollection('portfolio', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
+const firstName = site.author.split(' ')[0];
+const socials = Object.entries(site.social).filter(([, url]) => url);
+const labels: Record<string, string> = { github: 'GitHub', linkedin: 'LinkedIn', x: 'X' };
 const featuredWork = (
   portfolio.filter((p) => p.data.featured).length > 0
     ? portfolio.filter((p) => p.data.featured)
@@ -15,59 +18,49 @@ const featuredWork = (
 ---
 
 <BaseLayout>
+  <h1 class="visually-hidden">{site.author}</h1>
   <section>
     <p>
-      Hi, I'm {site.author}. I mostly build ML related software and occasionally write about it. 
+      Hi, I'm {firstName}. I mostly build ML-related software and occasionally write about it.
       This is where I keep my projects and write-ups.
     </p>
     <p class="muted">
       Find me on
-      {Object.entries(site.social)
-        .filter(([, url]) => url)
-        .map(([name, url], i, arr) => (
-          <>
-            <a href={url} rel="me noopener" target="_blank">{name}</a>{i < arr.length - 1 ? ', ' : ''}
-          </>
-        ))}
+      {socials.map(([name, url], i) => (
+        <>
+          <a href={url} rel="me noopener" target="_blank">{labels[name] ?? name}</a>{i < socials.length - 1 ? ', ' : ''}
+        </>
+      ))}
       or send an <a href={`mailto:${site.email}`}>email</a>.
     </p>
   </section>
 
-  <hr />
-
   <section>
     <h2>Portfolio</h2>
     {featuredWork.length === 0 && <p class="muted">No work yet.</p>}
-    <ul class="list">
+    <ul class="entries">
       {featuredWork.map((item) => (
         <li>
-          <a href={withBase(`/portfolio/${item.id}/`)}>{item.data.title}</a>
-          <p class="muted">{item.data.description}</p>
+          <div class="entry-head">
+            <a href={withBase(`/portfolio/${item.id}/`)}>{item.data.title}</a>
+            <time datetime={item.data.date.toISOString()}>{item.data.year ?? item.data.date.getFullYear()}</time>
+          </div>
+          <p>{item.data.description}</p>
         </li>
       ))}
     </ul>
-    <p><a href={withBase('/portfolio')}>All work →</a></p>
+    <p class="all"><a href={withBase('/portfolio')}>All work</a></p>
   </section>
 </BaseLayout>
 
 <style>
-  .list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  h2 {
+    margin-top: 3rem;
+    margin-bottom: 1.25rem;
   }
 
-  .list li {
-    padding: 0.6rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .list li p {
-    margin: 0.15rem 0 0;
-    font-size: 0.9rem;
-  }
-
-  .list li time {
-    margin-left: 0.5rem;
+  .all {
+    margin-top: 1.75rem;
+    font-size: 0.9375rem;
   }
 </style>

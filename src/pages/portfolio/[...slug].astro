@@ -17,41 +17,21 @@ const { Content } = await render(item);
 
 <BaseLayout title={item.data.title} description={item.data.description}>
   <article>
-    <header>
+    <header class="article-head">
       <h1>{item.data.title}</h1>
-      <p class="muted">{item.data.description}</p>
+      <p>{item.data.description}</p>
       <dl class="facts">
-        {item.data.role && (
-          <div>
-            <dt>Role</dt>
-            <dd>{item.data.role}</dd>
-          </div>
-        )}
-        {item.data.client && (
-          <div>
-            <dt>Client</dt>
-            <dd>{item.data.client}</dd>
-          </div>
-        )}
-        {item.data.year && (
-          <div>
-            <dt>Year</dt>
-            <dd>{item.data.year}</dd>
-          </div>
+        {item.data.role && (<><dt>Role</dt><dd>{item.data.role}</dd></>)}
+        {item.data.client && (<><dt>Client</dt><dd>{item.data.client}</dd></>)}
+        {item.data.year && (<><dt>Year</dt><dd class="num">{item.data.year}</dd></>)}
+        {item.data.tags.length > 0 && (<><dt>Stack</dt><dd>{item.data.tags.join(', ')}</dd></>)}
+        {item.data.url && (
+          <>
+            <dt>Live</dt>
+            <dd><a href={item.data.url} rel="noopener" target="_blank">{item.data.url.replace(/^https?:\/\//, '')}</a></dd>
+          </>
         )}
       </dl>
-      {item.data.tags.length > 0 && (
-        <div class="tags">
-          {item.data.tags.map((tag) => (
-            <span class="tag">{tag}</span>
-          ))}
-        </div>
-      )}
-      {item.data.url && (
-        <div class="links">
-          <a href={item.data.url} rel="noopener" target="_blank">View project ↗</a>
-        </div>
-      )}
     </header>
 
     {item.data.image && <img class="cover" src={item.data.image} alt="" />}
@@ -65,54 +45,9 @@ const { Content } = await render(item);
 </BaseLayout>
 
 <style>
-  article header {
-    margin-bottom: 2rem;
-  }
-
-  .facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    margin: 0.75rem 0 0;
-  }
-
-  .facts dt {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--muted);
-  }
-
-  .facts dd {
-    margin: 0.1rem 0 0;
-    font-size: 0.9rem;
-  }
-
-  .tags {
-    display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-    margin-top: 0.75rem;
-  }
-
-  .tag {
-    font-size: 0.75rem;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.05rem 0.5rem;
-  }
-
-  .links {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.75rem;
-  }
-
   .cover {
     width: 100%;
-    border-radius: 10px;
-    border: 1px solid var(--border);
+    border-radius: 4px;
     margin-bottom: 2rem;
   }
 </style>
