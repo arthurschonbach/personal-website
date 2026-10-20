@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Donut from '../components/Donut.astro';
 import { site } from '../site.config';
 import { withBase } from '../lib/url';
 
@@ -19,20 +20,23 @@ const featuredWork = (
 
 <BaseLayout>
   <h1 class="visually-hidden">{site.author}</h1>
-  <section>
-    <p>
-      Hi, I'm {firstName}. I mostly build ML-related software and occasionally write about it.
-      This is where I keep my projects and write-ups.
-    </p>
-    <p class="muted">
-      Find me on
-      {socials.map(([name, url], i) => (
-        <>
-          <a href={url} rel="me noopener" target="_blank">{labels[name] ?? name}</a>{i < socials.length - 1 ? ', ' : ''}
-        </>
-      ))}
-      or send an <a href={`mailto:${site.email}`}>email</a>.
-    </p>
+  <section class="intro">
+    <div>
+      <p>
+        Hi, I'm {firstName}. I mostly build ML-related software and occasionally write about it.
+        This is where I keep my projects and write-ups.
+      </p>
+      <p class="muted">
+        Find me on
+        {socials.map(([name, url], i) => (
+          <>
+            <a href={url} rel="me noopener" target="_blank">{labels[name] ?? name}</a>{i < socials.length - 1 ? ', ' : ''}
+          </>
+        ))}
+        or send an <a href={`mailto:${site.email}`}>email</a>.
+      </p>
+    </div>
+    <Donut />
   </section>
 
   <section>
@@ -54,6 +58,24 @@ const featuredWork = (
 </BaseLayout>
 
 <style>
+  .intro {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 560px) {
+    .intro {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+  }
+
   h2 {
     margin-top: 3rem;
     margin-bottom: 1.25rem;
