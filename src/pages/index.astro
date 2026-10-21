@@ -73,6 +73,12 @@ const featuredWork = (
     .intro {
       grid-template-columns: 1fr;
       gap: 1.75rem;
+      /* Stacked under the text, the donut looks stranded on the left. */
+      justify-items: center;
+    }
+
+    .intro > div {
+      justify-self: stretch;
     }
   }
 
